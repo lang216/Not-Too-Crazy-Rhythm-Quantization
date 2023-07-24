@@ -20,7 +20,7 @@ The project consists of several utility functions and algorithms to perform rhyt
 
 2. Install the required dependencies, such as numpy and scikit-learn. The list of required packages will be provided in the 'requirements.txt' file (to be released).
 
-3. Prepare your rhythm data: Open or create a text file (rename it to 'input.txt') containing a sequence of onsets in the OpenMusic format (LISP). You can use the 'convert_to_om' function from 'OM_PY_utilities' to convert a Python list to an OpenMusic (LISP) list.
+3. Prepare your rhythm data: Open or create a text file (rename it to 'input.txt') containing a sequence of onsets in the OpenMusic format (LISP). You can use the 'convert_to_om' function from 'OM_PY_utilities' to convert a Python list to an OpenMusic (LISP) list. The time unit used thoroughly is ms.
 
 6. Apply rhythm quantization:
 - Simply run 'main.py' to execute the quantization process.
