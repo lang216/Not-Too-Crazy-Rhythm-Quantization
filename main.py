@@ -32,12 +32,15 @@ def main(onsets, max_num_clusters=10, divisions=[1/32, 1/24, 1/20, 1/28]):
     optimized_n_c = tmp[best_total_error]
 
     return optimized_n_c, best_grouped_onsets_final, best_grouped_durations, best_result, best_total_error
-
+    
  
 if __name__ == "__main__":
 
+    txt_file = 'input.txt'
+
     #please change the onsets according to your own need
-    onsets = om_to_python('(0 211 424 13063 13764 13998 26178 26989 28018 36155)')
+    #onsets = om_to_python('(0 211 424 13063 13764 13998 26178 26989 28018 36155)')
+    onsets = om_to_python(get_durations(txt_file))
 
     #please change the smallest note divisions you want to use
     divisions=[1/32, 1/24, 1/20, 1/28] 
