@@ -5,7 +5,7 @@ def group_onsets(onsets, num_clusters):
     X = [[onset] for onset in onsets]
 
     # Apply K-means clustering
-    kmeans = KMeans(n_clusters=num_clusters)
+    kmeans = KMeans(n_clusters=num_clusters, n_init='auto')
     kmeans.fit(X)
 
     # Retrieve the cluster labels assigned to each onset
