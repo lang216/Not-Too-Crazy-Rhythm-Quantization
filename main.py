@@ -36,7 +36,7 @@ def main(onsets, max_num_clusters=10, divisions=[1/32, 1/24, 1/20, 1/28]):
  
 if __name__ == "__main__":
 
-    txt_file = 'Not-Too-Crazy-Rhythm-Quantization/input.txt'
+    txt_file = './input.txt'
 
     #please change the onsets according to your own need
     #onsets = om_to_python('(0 211 424 13063 13764 13998 26178 26989 28018 36155)')
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     list_of_time_signature = [make_time_signature(l_n_b, l_n_v) for l_n_b, l_n_v in zip(list_of_number_of_beats, list_of_note_values)]
 
     #output the information to output.txt - numeric data is organized in the format of OpenMusic
-    with open('Not-Too-Crazy-Rhythm-Quantization/output.txt', 'w') as f:
+    with open('./output.txt', 'w') as f:
             f.write('Optimized Number of Sections: '+str(optimized_n_c) + '\n'+'\n')
             f.write('Best Total Error: '+str(best_total_error) + '\n'+'\n')
             f.write('Duration Of Each Section: '+convert_to_om(list_of_durations_of_each_section) + '\n'+'\n')
