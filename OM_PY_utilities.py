@@ -110,7 +110,7 @@ def calculate_error(original_durations, quantized_durations):
     simple_errors = np.array(original_durations) - np.array(quantized_durations)
     literal_errors = np.sum(np.abs(simple_errors))
     overall_errors = np.sum(simple_errors)
-    overall_errors_abs = np.abs(overall_errors_abs)
+    overall_errors_abs = np.abs(overall_errors)
     return overall_errors, overall_errors_abs, literal_errors
 
 
