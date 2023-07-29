@@ -1,6 +1,7 @@
 from fractions import Fraction
 import re
 import numpy as np
+from math import gcd
 
 # Read the content of a text file
 def read_txt_file(filename):
@@ -11,27 +12,31 @@ def read_txt_file(filename):
 def get_durations(filename):
     return read_txt_file(filename)
 
-def om_to_python(om_list_str):
-    # Initialize an empty list to store the parsed elements
-    python_list = []
+from fractions import Fraction
+import re
 
-    # Define a regular expression to match digits and fractions in the input string
-    pattern = r"(\d+/\d+|\d+)"
+def om_to_python(om_list_str):
+    # Define a regular expression to match elements in the OpenMusic list
+    pattern = r"\(([^()]+)\)"
 
     # Find all matches of the pattern in the input string
     matches = re.findall(pattern, om_list_str)
 
-    for match in matches:
-        # If the match is a fraction (e.g., '1/2'), convert it to a Python Fraction
-        if '/' in match:
-            numerator, denominator = map(int, match.split('/'))
-            element = Fraction(numerator, denominator)
+    def convert_element(element):
+        # If the element contains parentheses, it is a nested list or tuple
+        if '(' in element and ')' in element:
+            return om_to_python(element)
         else:
-            # If the match is an integer, convert it to an integer
-            element = int(match)
+            # Split the element by spaces and convert each part individually
+            elements = element.split()
+            return [int(e) if e.isdigit() else float(e) for e in elements]
 
-        # Append the parsed element to the Python list
-        python_list.append(element)
+    # Use the helper function to convert each element of the list
+    python_list = [convert_element(match) for match in matches]
+
+    # If there is only one element in the python_list, return it as the final result
+    if len(python_list) == 1:
+        return python_list[0]
 
     return python_list
 
@@ -102,17 +107,56 @@ def calculate_error(original_durations, quantized_durations):
     if len(original_durations) != len(quantized_durations):
         raise ValueError("The lengths of original_durations and quantized_durations must be the same.")
     
-    errors = np.sum(np.array(original_durations) - np.array(quantized_durations))
-    errors_abs = np.abs(errors)
-    return errors
+    simple_errors = np.array(original_durations) - np.array(quantized_durations)
+    literal_errors = np.sum(np.abs(simple_errors))
+    overall_errors = np.sum(simple_errors)
+    overall_errors_abs = np.abs(overall_errors_abs)
+    return overall_errors, overall_errors_abs, literal_errors
 
 
 def x_2_dx(lox):
-    lodx = []
-    for i in range(len(lox)-1):
-        lodx.append(lox[i+1]-lox[i])
-    return lodx
 
+    # Function to preprocess the input list and convert non-list elements into single-element lists
+    def preprocess_input_list(input_list):
+        processed_list = []
+        sublist = []
+        for element in input_list:
+            if isinstance(element, list):
+                if sublist:
+                    processed_list.append(sublist)
+                    sublist = []
+                processed_list.append(element)
+            else:
+                sublist.append(element)
+        if sublist:
+            processed_list.append(sublist)
+        return processed_list
+    # Preprocess the input list to convert non-list elements into single-element lists
+    lox = preprocess_input_list(lox)
+
+    # Step 1: Append the first element of the next internal list to the end of each internal list
+    def append_next_element_to_end(list_of_lists):
+        result = []
+        for i in range(len(list_of_lists)):
+            sublist = list_of_lists[i]
+            if i < len(list_of_lists) - 1:
+                next_sublist = list_of_lists[i + 1]
+                sublist = sublist + [next_sublist[0]]
+            result.append(sublist)
+        return result
+
+    # Step 2: Append the first element of the next internal list to the end of each internal list
+    lox = append_next_element_to_end(lox)
+
+    # Step 3: Calculate the durations between adjacent onsets within each sublist using list comprehension
+    lodx = [[sublist[i + 1] - sublist[i] for i in range(len(sublist) - 1)] for sublist in lox]
+   
+    # Step 4: Remove the empty list at the end, if present
+    if lodx and not lodx[-1]:
+        lodx.pop()
+    
+    # Step 5: Return the list of lists containing the durations between adjacent onsets
+    return lodx
 
 def get_tempo(result):
     return result[0]
